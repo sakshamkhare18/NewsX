@@ -7,11 +7,18 @@ function NewsList({ category , searchQuery   }) {
   async function getNews() {
     const query = searchQuery || category;
     const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+    console.log("API KEY EXISTS:", !!API_KEY);
+console.log("API KEY LENGTH:", API_KEY?.length);
     const API_URL = `https://newsapi.org/v2/everything?q=${query}&language=hi&apiKey=${API_KEY}`;
     const response = await fetch(API_URL);
     const data = await response.json();
     console.log(data);
-    setNews(data.articles);
+    if (data.status === "ok") {
+  setNews(data.articles);
+} else {
+  console.log("News API Error:", data);
+  setNews([]);
+}
     setLoading(false);
   }
   useEffect(() => {
